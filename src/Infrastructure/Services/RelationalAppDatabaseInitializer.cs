@@ -15,6 +15,6 @@ public sealed class RelationalAppDatabaseInitializer : IAppDatabaseInitializer
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        await _dbContext.Database.EnsureCreatedAsync(cancellationToken);
+        await _dbContext.Database.MigrateAsync(cancellationToken);
     }
 }
