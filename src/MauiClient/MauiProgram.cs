@@ -1,11 +1,14 @@
 using System;
 using System.IO;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
 using TestAppMaui.Application;
 using TestAppMaui.Infrastructure;
+using TestAppMaui.Infrastructure.Data;
 using TestAppMaui.MauiClient.Services;
 using TestAppMaui.MauiClient.ViewModels;
 using TestAppMaui.MauiClient.Views;
@@ -43,6 +46,7 @@ public static class MauiProgram
             .AddSingleton<MainViewModel>()
             .AddSingleton<MainPage>()
             .AddSingleton<ILocalTaskStore, ApplicationLocalTaskStore>()
+
             .AddHttpClient<IGatewayApiClient, GatewayApiClient>(client =>
             {
                 client.BaseAddress = new Uri(gatewayBaseUrl);
