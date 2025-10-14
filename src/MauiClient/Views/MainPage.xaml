@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TestAppMaui.MauiClient.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
+    Title="Zadania">
+    <VerticalStackLayout Padding="16" Spacing="16">
+        <Label Text="Zadania" FontAttributes="Bold" FontSize="24" />
+
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+            <telerik:RadEntry
+                Grid.Row="0"
+                Grid.Column="0"
+                Placeholder="Tytuł"
+                Text="{Binding NewTaskTitle}" />
+            <telerik:RadEntry
+                Grid.Row="0"
+                Grid.Column="1"
+                Placeholder="Opis"
+                Text="{Binding NewTaskDescription}" />
+            <DatePicker
+                Grid.Row="1"
+                Grid.Column="0"
+                Date="{Binding NewTaskDueDate}"
+                Format="dd.MM.yyyy"
+                HorizontalOptions="Fill" />
+            <telerik:RadButton
+                Grid.Row="1"
+                Grid.Column="1"
+                Text="Dodaj"
+                Command="{Binding CreateTaskCommand}" />
+        </Grid>
+
+        <telerik:RadDataGrid
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding Tasks}"
+            UserEditMode="Inline">
+            <telerik:RadDataGrid.Columns>
+                <telerik:DataGridTextColumn HeaderText="Tytuł" PropertyName="Title" />
+                <telerik:DataGridTextColumn HeaderText="Opis" PropertyName="Description" />
+                <telerik:DataGridDateColumn HeaderText="Termin" PropertyName="DueDate" />
+                <telerik:DataGridBooleanColumn HeaderText="Ukończone" PropertyName="IsCompleted" />
+            </telerik:RadDataGrid.Columns>
+        </telerik:RadDataGrid>
+    </VerticalStackLayout>
+</ContentPage>
