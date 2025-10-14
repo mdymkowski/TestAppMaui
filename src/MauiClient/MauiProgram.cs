@@ -1,10 +1,13 @@
 using System;
 using System.IO;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
+using TestAppMaui.Application;
+using TestAppMaui.Infrastructure;
 using TestAppMaui.Infrastructure.Data;
 using TestAppMaui.MauiClient.Services;
 using TestAppMaui.MauiClient.ViewModels;
@@ -35,13 +38,15 @@ public static class MauiProgram
         }
 
         builder.Services
-            .AddDbContextFactory<ApplicationDbContext>(options =>
+            .AddApplication()
+            .AddInfrastructure(options =>
             {
-                options.UseSqlite($"Data Source={databasePath}");
+                options.UseSqlite(databasePath);
             })
             .AddSingleton<MainViewModel>()
             .AddSingleton<MainPage>()
-            .AddSingleton<ILocalTaskStore, EfCoreLocalTaskStore>()
+            .AddSingleton<ILocalTaskStore, ApplicationLocalTaskStore>()
+
             .AddHttpClient<IGatewayApiClient, GatewayApiClient>(client =>
             {
                 client.BaseAddress = new Uri(gatewayBaseUrl);
