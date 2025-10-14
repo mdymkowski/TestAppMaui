@@ -22,6 +22,25 @@ public sealed class TaskItem : Entity, IAggregateRoot
         DueDate = dueDate;
     }
 
+    public static TaskItem FromExisting(Guid id, string title, string? description, DateTime? dueDate, bool isCompleted)
+    {
+        var task = new TaskItem(title, description, dueDate)
+        {
+            Id = id
+        };
+
+        if (isCompleted)
+        {
+            task.MarkComplete();
+        }
+        else
+        {
+            task.MarkIncomplete();
+        }
+
+        return task;
+    }
+
     public void UpdateDetails(string title, string? description, DateTime? dueDate)
     {
         Title = Guard.Argument(title, nameof(title)).NotNull().NotWhiteSpace().Value;
