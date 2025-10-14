@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.OpenApi.Models;
 using TestAppMaui.Application;
 using TestAppMaui.Application.Common.Interfaces;
+using TestAppMaui.Application.Common.Models;
 using TestAppMaui.Application.Tasks.Commands.CreateTask;
 using TestAppMaui.Application.Tasks.Queries.GetTasks;
 using TestAppMaui.Infrastructure;
@@ -25,9 +26,21 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddApplication();
+var connectionString = builder.Configuration.GetConnectionString("GatewayDatabase")
+    ?? throw new InvalidOperationException("Connection string 'GatewayDatabase' is not configured.");
 
-var databasePath = Path.Combine(AppContext.BaseDirectory, "gateway.db");
-builder.Services.AddInfrastructure(databasePath);
+var crmSection = builder.Configuration.GetSection("Crm");
+var crmConfigured = !string.IsNullOrWhiteSpace(crmSection.GetValue<string>("BaseUrl"));
+
+builder.Services.AddInfrastructure(options =>
+{
+    options.UseSqlServer(connectionString);
+
+    if (crmConfigured)
+    {
+        options.ConfigureCrm(crm => crmSection.Bind(crm));
+    }
+});
 
 var app = builder.Build();
 
@@ -52,6 +65,22 @@ app.MapPost("/tasks", async (CreateTaskRequest request, IMediator mediator, Canc
     return Results.Created($"/tasks/{created.Id}", created);
 });
 
+if (crmConfigured)
+{
+    app.MapGet("/crm/tasks/{id:guid}", async (Guid id, ICrmService crmService, CancellationToken cancellationToken) =>
+    {
+        var task = await crmService.GetTaskAsync(id, cancellationToken);
+        return task is null ? Results.NotFound() : Results.Ok(task);
+    });
+
+    app.MapPost("/crm/tasks", async (CrmTaskRequest request, ICrmService crmService, CancellationToken cancellationToken) =>
+    {
+        var dto = new TaskDto(request.Id ?? Guid.Empty, request.Title, request.Description, request.DueDate, request.IsCompleted);
+        var result = await crmService.UpsertTaskAsync(dto, cancellationToken);
+        return Results.Ok(result);
+    });
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var initializer = scope.ServiceProvider.GetRequiredService<IAppDatabaseInitializer>();
@@ -61,3 +90,4 @@ using (var scope = app.Services.CreateScope())
 app.Run();
 
 internal sealed record CreateTaskRequest(string Title, string? Description, DateTime? DueDate);
+internal sealed record CrmTaskRequest(string Title, string? Description, DateTime? DueDate, bool IsCompleted, Guid? Id);

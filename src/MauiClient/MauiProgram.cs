@@ -1,10 +1,9 @@
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
-using TestAppMaui.Application;
-using TestAppMaui.Application.Common.Interfaces;
-using TestAppMaui.Infrastructure;
+using TestAppMaui.MauiClient.Services;
 using TestAppMaui.MauiClient.ViewModels;
 using TestAppMaui.MauiClient.Views;
 
@@ -18,20 +17,25 @@ public static class MauiProgram
         builder.UseMauiApp<App>();
 
         var databasePath = Path.Combine(FileSystem.AppDataDirectory, "testappmaui.db");
+        var gatewayBaseUrl = Environment.GetEnvironmentVariable("GATEWAY_BASE_URL")
+            ?? builder.Configuration["Gateway:BaseUrl"]
+            ?? "https://localhost:5001/";
+
+        if (!gatewayBaseUrl.EndsWith('/'))
+        {
+            gatewayBaseUrl += "/";
+        }
 
         builder.Services
             .AddSingleton<MainViewModel>()
-            .AddSingleton<MainPage>();
-
-        builder.Services
-            .AddApplication()
-            .AddInfrastructure(databasePath);
+            .AddSingleton<MainPage>()
+            .AddSingleton<ILocalTaskStore>(_ => new SqliteLocalTaskStore(databasePath))
+            .AddHttpClient<IGatewayApiClient, GatewayApiClient>(client =>
+            {
+                client.BaseAddress = new Uri(gatewayBaseUrl);
+            });
 
         var app = builder.Build();
-
-        using var scope = app.Services.CreateScope();
-        var initializer = scope.ServiceProvider.GetRequiredService<IAppDatabaseInitializer>();
-        initializer.InitializeAsync().GetAwaiter().GetResult();
 
         return app;
     }
