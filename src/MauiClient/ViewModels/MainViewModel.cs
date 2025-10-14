@@ -1,17 +1,18 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MediatR;
 using Microsoft.Maui.ApplicationModel;
-using TestAppMaui.Application.Common.Models;
-using TestAppMaui.Application.Tasks.Commands.CreateTask;
-using TestAppMaui.Application.Tasks.Queries.GetTasks;
+using TestAppMaui.MauiClient.Models;
+using TestAppMaui.MauiClient.Services;
 
 namespace TestAppMaui.MauiClient.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly IMediator _mediator;
+    private readonly IGatewayApiClient _gatewayApiClient;
+    private readonly ILocalTaskStore _localTaskStore;
 
     public ObservableCollection<TaskDto> Tasks { get; } = new();
 
@@ -24,44 +25,114 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private DateTime? _newTaskDueDate = DateTime.Today;
 
+    [ObservableProperty]
+    private bool _isBusy;
+
+    [ObservableProperty]
+    private string? _errorMessage;
+
     public IAsyncRelayCommand CreateTaskCommand { get; }
 
-    public MainViewModel(IMediator mediator)
+    public IAsyncRelayCommand RefreshCommand { get; }
+
+    public MainViewModel(IGatewayApiClient gatewayApiClient, ILocalTaskStore localTaskStore)
     {
-        _mediator = mediator;
+        _gatewayApiClient = gatewayApiClient;
+        _localTaskStore = localTaskStore;
+
         CreateTaskCommand = new AsyncRelayCommand(CreateTaskAsync);
-        _ = LoadAsync();
+        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+
+        _ = InitializeAsync();
     }
 
-    private async Task LoadAsync()
+    private async Task InitializeAsync()
     {
-        var tasks = await _mediator.Send(new GetTasksQuery());
-        MainThread.BeginInvokeOnMainThread(() =>
+        try
         {
-            Tasks.Clear();
-            foreach (var task in tasks)
-            {
-                Tasks.Add(task);
-            }
-        });
+            await _localTaskStore.InitializeAsync().ConfigureAwait(false);
+            var localTasks = await _localTaskStore.GetTasksAsync().ConfigureAwait(false);
+            UpdateTasks(localTasks);
+
+            await RefreshAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
     }
 
     private async Task CreateTaskAsync()
     {
-        if (string.IsNullOrWhiteSpace(NewTaskTitle))
+        if (IsBusy || string.IsNullOrWhiteSpace(NewTaskTitle))
         {
             return;
         }
 
-        var command = new CreateTaskCommand(NewTaskTitle, NewTaskDescription, NewTaskDueDate);
-        var createdTask = await _mediator.Send(command);
+        try
+        {
+            IsBusy = true;
 
+            var request = new CreateTaskRequest(NewTaskTitle, NewTaskDescription, NewTaskDueDate);
+            var createdTask = await _gatewayApiClient.CreateTaskAsync(request).ConfigureAwait(false);
+            await _localTaskStore.AddOrUpdateTaskAsync(createdTask).ConfigureAwait(false);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Tasks.Add(createdTask);
+                NewTaskTitle = string.Empty;
+                NewTaskDescription = null;
+                NewTaskDueDate = DateTime.Today;
+            });
+
+            ErrorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        if (IsBusy)
+        {
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+
+            var remoteTasks = await _gatewayApiClient.GetTasksAsync().ConfigureAwait(false);
+            await _localTaskStore.ReplaceTasksAsync(remoteTasks).ConfigureAwait(false);
+            UpdateTasks(remoteTasks);
+
+            ErrorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void UpdateTasks(IEnumerable<TaskDto> tasks)
+    {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            Tasks.Add(createdTask);
-            NewTaskTitle = string.Empty;
-            NewTaskDescription = null;
-            NewTaskDueDate = DateTime.Today;
+            Tasks.Clear();
+            foreach (var task in tasks.OrderBy(t => t.DueDate ?? DateTime.MaxValue))
+            {
+                Tasks.Add(task);
+            }
         });
     }
 }

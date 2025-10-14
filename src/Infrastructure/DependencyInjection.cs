@@ -1,7 +1,11 @@
+using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using TestAppMaui.Application.Common.Interfaces;
 using TestAppMaui.Infrastructure.Data;
+using TestAppMaui.Infrastructure.Options;
 using TestAppMaui.Infrastructure.Repositories;
 using TestAppMaui.Infrastructure.Services;
 
@@ -9,19 +13,64 @@ namespace TestAppMaui.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string sqliteDatabasePath)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<InfrastructureOptions> configure)
     {
-        var directory = Path.GetDirectoryName(sqliteDatabasePath);
-        if (!string.IsNullOrWhiteSpace(directory))
+        ArgumentNullException.ThrowIfNull(configure);
+
+        var options = new InfrastructureOptions();
+        configure(options);
+
+        if (!options.Database.IsConfigured)
         {
-            Directory.CreateDirectory(directory);
+            throw new InvalidOperationException("The database provider must be configured for infrastructure services.");
         }
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite($"Data Source={sqliteDatabasePath}"));
+        services.AddDbContext<ApplicationDbContext>(builder =>
+        {
+            switch (options.Database.Provider)
+            {
+                case DatabaseProvider.Sqlite:
+                    if (!string.IsNullOrWhiteSpace(options.Database.SqliteDatabasePath))
+                    {
+                        var directory = Path.GetDirectoryName(options.Database.SqliteDatabasePath);
+                        if (!string.IsNullOrWhiteSpace(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+                    }
+
+                    builder.UseSqlite(options.Database.ConnectionString);
+                    break;
+
+                case DatabaseProvider.SqlServer:
+                    builder.UseSqlServer(options.Database.ConnectionString);
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Unsupported database provider: {options.Database.Provider}");
+            }
+        });
 
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-        services.AddScoped<IAppDatabaseInitializer, SqliteAppDatabaseInitializer>();
+        services.AddScoped<IAppDatabaseInitializer, RelationalAppDatabaseInitializer>();
+
+        if (options.Crm.IsConfigured)
+        {
+            services.AddOptions<CrmOptions>()
+                .Configure(o => options.Crm.CopyTo(o));
+
+            services.AddHttpClient<ICrmService, CrmService>()
+                .ConfigureHttpClient((provider, client) =>
+                {
+                    var crmOptions = provider.GetRequiredService<IOptions<CrmOptions>>().Value;
+                    crmOptions.ConfigureClient(client);
+                })
+                .ConfigurePrimaryHttpMessageHandler(provider =>
+                {
+                    var crmOptions = provider.GetRequiredService<IOptions<CrmOptions>>().Value;
+                    return crmOptions.CreateHandler();
+                });
+        }
 
         return services;
     }

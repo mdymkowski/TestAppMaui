@@ -8,6 +8,12 @@
     <VerticalStackLayout Padding="16" Spacing="16">
         <Label Text="Zadania" FontAttributes="Bold" FontSize="24" />
 
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+        <HorizontalStackLayout HorizontalOptions="End">
+            <telerik:RadButton Text="Odśwież" Command="{Binding RefreshCommand}" />
+        </HorizontalStackLayout>
+
         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
             <telerik:RadEntry
                 Grid.Row="0"

@@ -4,11 +4,11 @@ using TestAppMaui.Infrastructure.Data;
 
 namespace TestAppMaui.Infrastructure.Services;
 
-public sealed class SqliteAppDatabaseInitializer : IAppDatabaseInitializer
+public sealed class RelationalAppDatabaseInitializer : IAppDatabaseInitializer
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public SqliteAppDatabaseInitializer(ApplicationDbContext dbContext)
+    public RelationalAppDatabaseInitializer(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
