@@ -41,7 +41,7 @@ Presentation (MauiClient, Gateway)
  Infrastructure (EF Core, SQLite)
 ```
 
-Warstwa `Application` nie zna implementacji repozytoriów – komunikuje się z nimi przez interfejs `IRepository`. Wstrzykiwanie zależności zapewniają metody rozszerzające `AddApplication` i `AddInfrastructure`.
+Warstwa `Application` nie zna implementacji repozytoriów – komunikuje się z nimi przez interfejs `IRepository`. Wstrzykiwanie zależności zapewniają metody rozszerzające `AddGatewayApplication` i `AddGatewayInfrastructure`.
 
 ## Angular / Gateway
 
