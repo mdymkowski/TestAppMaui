@@ -1,15 +1,14 @@
 using System;
 using System.IO;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
-using TestAppMaui.Application;
-using TestAppMaui.Infrastructure;
-using TestAppMaui.Infrastructure.Data;
-using TestAppMaui.MauiClient.Services;
+using TestAppMaui.MauiClient.Application.Abstractions;
+using TestAppMaui.MauiClient.Infrastructure.Gateway;
+using TestAppMaui.MauiClient.Infrastructure.Persistence;
+using TestAppMaui.MauiClient.Infrastructure.Storage;
 using TestAppMaui.MauiClient.ViewModels;
 using TestAppMaui.MauiClient.Views;
 
@@ -28,6 +27,7 @@ public static class MauiProgram
         {
             Directory.CreateDirectory(databaseDirectory);
         }
+
         var gatewayBaseUrl = Environment.GetEnvironmentVariable("GATEWAY_BASE_URL")
             ?? builder.Configuration["Gateway:BaseUrl"]
             ?? "https://localhost:5001/";
@@ -38,15 +38,10 @@ public static class MauiProgram
         }
 
         builder.Services
-            .AddApplication()
-            .AddInfrastructure(options =>
-            {
-                options.UseSqlite(databasePath);
-            })
+            .AddDbContextFactory<LocalTaskDbContext>(options => options.UseSqlite(databasePath))
+            .AddSingleton<ILocalTaskStore, EfCoreLocalTaskStore>()
             .AddSingleton<MainViewModel>()
             .AddSingleton<MainPage>()
-            .AddSingleton<ILocalTaskStore, ApplicationLocalTaskStore>()
-
             .AddHttpClient<IGatewayApiClient, GatewayApiClient>(client =>
             {
                 client.BaseAddress = new Uri(gatewayBaseUrl);

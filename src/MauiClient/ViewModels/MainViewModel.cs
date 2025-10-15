@@ -4,8 +4,9 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
-using TestAppMaui.MauiClient.Models;
-using TestAppMaui.MauiClient.Services;
+using TestAppMaui.MauiClient.Application.Abstractions;
+using TestAppMaui.MauiClient.Domain;
+using TestAppMaui.SharedDDD.Contracts;
 
 namespace TestAppMaui.MauiClient.ViewModels;
 
