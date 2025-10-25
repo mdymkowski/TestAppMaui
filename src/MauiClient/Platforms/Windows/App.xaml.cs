@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
+using Microsoft.Maui;
 
-namespace TestAppMaui.MauiClient;
+namespace TestAppMaui.WinUI;
 
 public partial class App : MauiWinUIApplication
 {

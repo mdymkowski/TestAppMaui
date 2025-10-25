@@ -12,9 +12,9 @@ using TestAppMaui.MauiClient.Application.Tasks.Commands.CreateTask;
 using TestAppMaui.MauiClient.Infrastructure.Persistence;
 using TestAppMaui.MauiClient.Infrastructure.Tasks;
 using TestAppMaui.MauiClient.ViewModels;
-using TestAppMaui.MauiClient.Views;
+using TestAppMaui.Views;
 
-namespace TestAppMaui.MauiClient;
+namespace TestAppMaui;
 
 public static class MauiProgram
 {

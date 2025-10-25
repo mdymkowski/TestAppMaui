@@ -1,6 +1,7 @@
-using TestAppMaui.MauiClient.Views;
+using TestAppMaui.Views;
+using Microsoft.Maui.Controls;
 
-namespace TestAppMaui.MauiClient;
+namespace TestAppMaui;
 
 public partial class App : Application
 {

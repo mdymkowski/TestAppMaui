@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "2zH3v7UfhwU=",
+  "success": true,
+  "projectFilePath": "C:\\GIT\\TestAppMaui\\src\\MauiClient.Application\\MauiClient.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mdymkowski\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
+    "C:\\Users\\mdymkowski\\.nuget\\packages\\mediatr\\12.1.1\\mediatr.12.1.1.nupkg.sha512",
+    "C:\\Users\\mdymkowski\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
+    "C:\\Users\\mdymkowski\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="TestAppMaui.MauiClient.Views.MainPage"
+    x:Class="TestAppMaui.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
@@ -9,13 +9,13 @@
         <Label Text="Zadania" FontAttributes="Bold" FontSize="24" />
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-            <telerik:RadEntry
+            <!--<telerik:RadEntry
                 Placeholder="Nazwa zadania"
                 Text="{Binding NewTaskName}" />
             <telerik:RadButton
                 Grid.Column="1"
                 Text="Wyślij"
-                Command="{Binding SendCommand}" />
+                Command="{Binding SendCommand}" />-->
         </Grid>
 
         <Label Text="{Binding ErrorMessage}" TextColor="Red">
@@ -26,12 +26,12 @@
             </Label.Triggers>
         </Label>
 
-        <telerik:RadDataGrid
+        <!--<telerik:RadDataGrid
             AutoGenerateColumns="False"
             ItemsSource="{Binding Tasks}">
             <telerik:RadDataGrid.Columns>
                 <telerik:DataGridTextColumn HeaderText="Nazwa" PropertyName="Name" />
             </telerik:RadDataGrid.Columns>
-        </telerik:RadDataGrid>
+        </telerik:RadDataGrid>-->
     </VerticalStackLayout>
 </ContentPage>

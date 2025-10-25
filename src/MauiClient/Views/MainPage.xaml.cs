@@ -1,6 +1,6 @@
 using TestAppMaui.MauiClient.ViewModels;
 
-namespace TestAppMaui.MauiClient.Views;
+namespace TestAppMaui.Views;
 
 public partial class MainPage : ContentPage
 {

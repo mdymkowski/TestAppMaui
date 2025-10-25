@@ -1,6 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.19041.0</TargetFrameworks>
+	  <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>TestAppMaui.MauiClient</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -9,8 +10,15 @@
     <Nullable>enable</Nullable>
     <ApplicationTitle>TestAppMaui</ApplicationTitle>
     <ApplicationId>com.testappmaui.client</ApplicationId>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.19041.0</SupportedOSPlatformVersion>
-    <UseMauiEssentials>true</UseMauiEssentials>
+	  <WindowsPackageType>None</WindowsPackageType>
+
+	  <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+	  <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+	  <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+	  <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+	  <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	  <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+    <!--<UseMauiEssentials>true</UseMauiEssentials>-->
   </PropertyGroup>
   <ItemGroup>
     <MauiIcon Include="Resources\AppIcon\appicon.svg" />
@@ -29,13 +37,13 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
-    <PackageReference Include="Telerik.UI.for.Maui" />
+	  <PackageReference Include="Microsoft.Maui.Controls"  />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MauiClient.Application\MauiClient.Application.csproj" />
     <ProjectReference Include="..\MauiClient.Infrastructure\MauiClient.Infrastructure.csproj" />
   </ItemGroup>
-  <UsingTask TaskName="GenerateWindowsAsset" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+  <!--<UsingTask TaskName="GenerateWindowsAsset" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <OutputPath ParameterType="System.String" Required="true" />
       <Base64Data ParameterType="System.String" Required="true" />
@@ -55,7 +63,7 @@
         File.WriteAllBytes(OutputPath, data);
       ]]></Code>
     </Task>
-  </UsingTask>
+  </UsingTask>-->
   <ItemGroup>
     <WindowsGeneratedAsset Include="$(MSBuildProjectDirectory)\Platforms\Windows\Assets\SplashScreen.png">
       <Base64Data>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=</Base64Data>
@@ -70,7 +78,7 @@
       <Base64Data>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=</Base64Data>
     </WindowsGeneratedAsset>
   </ItemGroup>
-  <Target Name="GenerateWindowsPlaceholderAssets" BeforeTargets="PrepareForBuild">
+  <!--<Target Name="GenerateWindowsPlaceholderAssets" BeforeTargets="PrepareForBuild">
     <GenerateWindowsAsset OutputPath="%(WindowsGeneratedAsset.Identity)" Base64Data="%(WindowsGeneratedAsset.Base64Data)" />
-  </Target>
+  </Target>-->
 </Project>
