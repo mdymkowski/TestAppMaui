@@ -1,30 +1,26 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentValidation;
+using MediatR;
 using Microsoft.Maui.ApplicationModel;
-using TestAppMaui.MauiClient.Application.Abstractions;
-using TestAppMaui.MauiClient.Domain;
-using TestAppMaui.SharedDDD.Contracts;
+using TestAppMaui.MauiClient.Application.Tasks;
+using TestAppMaui.MauiClient.Application.Tasks.Commands.CreateTask;
+using TestAppMaui.MauiClient.Application.Tasks.Queries;
 
 namespace TestAppMaui.MauiClient.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly IGatewayApiClient _gatewayApiClient;
-    private readonly ILocalTaskStore _localTaskStore;
+    private readonly IMediator _mediator;
 
     public ObservableCollection<TaskDto> Tasks { get; } = new();
 
     [ObservableProperty]
-    private string _newTaskTitle = string.Empty;
-
-    [ObservableProperty]
-    private string? _newTaskDescription;
-
-    [ObservableProperty]
-    private DateTime? _newTaskDueDate = DateTime.Today;
+    private string _newTaskName = string.Empty;
 
     [ObservableProperty]
     private bool _isBusy;
@@ -32,18 +28,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string? _errorMessage;
 
-    public IAsyncRelayCommand CreateTaskCommand { get; }
+    public IAsyncRelayCommand SendCommand { get; }
 
-    public IAsyncRelayCommand RefreshCommand { get; }
-
-    public MainViewModel(IGatewayApiClient gatewayApiClient, ILocalTaskStore localTaskStore)
+    public MainViewModel(IMediator mediator)
     {
-        _gatewayApiClient = gatewayApiClient;
-        _localTaskStore = localTaskStore;
-
-        CreateTaskCommand = new AsyncRelayCommand(CreateTaskAsync);
-        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
-
+        _mediator = mediator;
+        SendCommand = new AsyncRelayCommand(SendAsync);
         _ = InitializeAsync();
     }
 
@@ -51,41 +41,9 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            await _localTaskStore.InitializeAsync().ConfigureAwait(false);
-            var localTasks = await _localTaskStore.GetTasksAsync().ConfigureAwait(false);
-            UpdateTasks(localTasks);
-
-            await RefreshAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-        }
-    }
-
-    private async Task CreateTaskAsync()
-    {
-        if (IsBusy || string.IsNullOrWhiteSpace(NewTaskTitle))
-        {
-            return;
-        }
-
-        try
-        {
             IsBusy = true;
-
-            var request = new CreateTaskRequest(NewTaskTitle, NewTaskDescription, NewTaskDueDate);
-            var createdTask = await _gatewayApiClient.CreateTaskAsync(request).ConfigureAwait(false);
-            await _localTaskStore.AddOrUpdateTaskAsync(createdTask).ConfigureAwait(false);
-
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                Tasks.Add(createdTask);
-                NewTaskTitle = string.Empty;
-                NewTaskDescription = null;
-                NewTaskDueDate = DateTime.Today;
-            });
-
+            var tasks = await _mediator.Send(new GetTasksQuery()).ConfigureAwait(false);
+            UpdateTasks(tasks);
             ErrorMessage = null;
         }
         catch (Exception ex)
@@ -98,7 +56,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private async Task RefreshAsync()
+    private async Task SendAsync()
     {
         if (IsBusy)
         {
@@ -108,12 +66,20 @@ public partial class MainViewModel : ObservableObject
         try
         {
             IsBusy = true;
+            var createdTask = await _mediator.Send(new CreateTaskCommand(NewTaskName)).ConfigureAwait(false);
 
-            var remoteTasks = await _gatewayApiClient.GetTasksAsync().ConfigureAwait(false);
-            await _localTaskStore.ReplaceTasksAsync(remoteTasks).ConfigureAwait(false);
-            UpdateTasks(remoteTasks);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var insertIndex = Tasks.TakeWhile(task => string.Compare(task.Name, createdTask.Name, StringComparison.CurrentCultureIgnoreCase) <= 0).Count();
+                Tasks.Insert(insertIndex, createdTask);
+                NewTaskName = string.Empty;
+            });
 
             ErrorMessage = null;
+        }
+        catch (ValidationException validationException)
+        {
+            ErrorMessage = validationException.Errors.FirstOrDefault()?.ErrorMessage ?? validationException.Message;
         }
         catch (Exception ex)
         {
@@ -130,7 +96,7 @@ public partial class MainViewModel : ObservableObject
         MainThread.BeginInvokeOnMainThread(() =>
         {
             Tasks.Clear();
-            foreach (var task in tasks.OrderBy(t => t.DueDate ?? DateTime.MaxValue))
+            foreach (var task in tasks.OrderBy(task => task.Name, StringComparer.CurrentCultureIgnoreCase))
             {
                 Tasks.Add(task);
             }

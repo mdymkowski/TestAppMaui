@@ -5,7 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="MediatR" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Domain\MauiClient.Domain.csproj" />
-    <ProjectReference Include="..\..\SharedDDD\Contracts\SharedDDD.Contracts.csproj" />
   </ItemGroup>
 </Project>
