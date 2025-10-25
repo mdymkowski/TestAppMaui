@@ -8,45 +8,29 @@
     <VerticalStackLayout Padding="16" Spacing="16">
         <Label Text="Zadania" FontAttributes="Bold" FontSize="24" />
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-
-        <HorizontalStackLayout HorizontalOptions="End">
-            <telerik:RadButton Text="Odśwież" Command="{Binding RefreshCommand}" />
-        </HorizontalStackLayout>
-
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
             <telerik:RadEntry
-                Grid.Row="0"
-                Grid.Column="0"
-                Placeholder="Tytuł"
-                Text="{Binding NewTaskTitle}" />
-            <telerik:RadEntry
-                Grid.Row="0"
-                Grid.Column="1"
-                Placeholder="Opis"
-                Text="{Binding NewTaskDescription}" />
-            <DatePicker
-                Grid.Row="1"
-                Grid.Column="0"
-                Date="{Binding NewTaskDueDate}"
-                Format="dd.MM.yyyy"
-                HorizontalOptions="Fill" />
+                Placeholder="Nazwa zadania"
+                Text="{Binding NewTaskName}" />
             <telerik:RadButton
-                Grid.Row="1"
                 Grid.Column="1"
-                Text="Dodaj"
-                Command="{Binding CreateTaskCommand}" />
+                Text="Wyślij"
+                Command="{Binding SendCommand}" />
         </Grid>
+
+        <Label Text="{Binding ErrorMessage}" TextColor="Red">
+            <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Label.Triggers>
+        </Label>
 
         <telerik:RadDataGrid
             AutoGenerateColumns="False"
-            ItemsSource="{Binding Tasks}"
-            UserEditMode="Inline">
+            ItemsSource="{Binding Tasks}">
             <telerik:RadDataGrid.Columns>
-                <telerik:DataGridTextColumn HeaderText="Tytuł" PropertyName="Title" />
-                <telerik:DataGridTextColumn HeaderText="Opis" PropertyName="Description" />
-                <telerik:DataGridDateColumn HeaderText="Termin" PropertyName="DueDate" />
-                <telerik:DataGridBooleanColumn HeaderText="Ukończone" PropertyName="IsCompleted" />
+                <telerik:DataGridTextColumn HeaderText="Nazwa" PropertyName="Name" />
             </telerik:RadDataGrid.Columns>
         </telerik:RadDataGrid>
     </VerticalStackLayout>
