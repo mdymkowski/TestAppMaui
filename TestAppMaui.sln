@@ -14,11 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.Api", "src/Gateway/
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedDDD.Contracts", "src/SharedDDD/Contracts/SharedDDD.Contracts.csproj", "{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Domain", "src/MauiClient/Domain/MauiClient.Domain.csproj", "{1632F161-9F15-4E64-BF6A-E5BEC881D933}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Domain", "src/MauiClient.Domain/MauiClient.Domain.csproj", "{1632F161-9F15-4E64-BF6A-E5BEC881D933}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Application", "src/MauiClient/Application/MauiClient.Application.csproj", "{A2AC7002-421B-407B-9FF7-8A17028F3047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Application", "src/MauiClient.Application/MauiClient.Application.csproj", "{A2AC7002-421B-407B-9FF7-8A17028F3047}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Infrastructure", "src/MauiClient/Infrastructure/MauiClient.Infrastructure.csproj", "{38A21B5A-4870-4CF3-80FA-04966FEB2B6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Infrastructure", "src/MauiClient.Infrastructure/MauiClient.Infrastructure.csproj", "{38A21B5A-4870-4CF3-80FA-04966FEB2B6B}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution

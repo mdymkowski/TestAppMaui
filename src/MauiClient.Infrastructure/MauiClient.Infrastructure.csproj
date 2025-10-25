@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Application\MauiClient.Application.csproj" />
-    <ProjectReference Include="..\Domain\MauiClient.Domain.csproj" />
+    <ProjectReference Include="..\MauiClient.Application\MauiClient.Application.csproj" />
+    <ProjectReference Include="..\MauiClient.Domain\MauiClient.Domain.csproj" />
   </ItemGroup>
 </Project>

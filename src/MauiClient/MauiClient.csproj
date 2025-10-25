@@ -32,8 +32,8 @@
     <PackageReference Include="Telerik.UI.for.Maui" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include=".\Application\MauiClient.Application.csproj" />
-    <ProjectReference Include=".\Infrastructure\MauiClient.Infrastructure.csproj" />
+    <ProjectReference Include="..\MauiClient.Application\MauiClient.Application.csproj" />
+    <ProjectReference Include="..\MauiClient.Infrastructure\MauiClient.Infrastructure.csproj" />
   </ItemGroup>
   <UsingTask TaskName="GenerateWindowsAsset" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
