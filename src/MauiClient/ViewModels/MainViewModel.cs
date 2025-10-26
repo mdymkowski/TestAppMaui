@@ -40,6 +40,11 @@ public partial class MainViewModel : ObservableObject
         _ = InitializeAsync();
     }
 
+    partial void OnNewTaskNameChanged(string value)
+    {
+        NewTaskDescription = $"Domyœlny opis dla: {value}";
+    }
+
     private async Task InitializeAsync()
     {
         try
