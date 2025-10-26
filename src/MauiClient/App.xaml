@@ -5,12 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <Style TargetType="ContentPage">
                 <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F2F2F7, Dark=#1C1C1E}" />
             </Style>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+          
         </ResourceDictionary>
     </Application.Resources>
 </Application>

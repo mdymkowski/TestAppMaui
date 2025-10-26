@@ -11,7 +11,7 @@ build_property.InvariantGlobalization = false
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
-build_property.RootNamespace = TestAppMaui.MauiClient
+build_property.RootNamespace = TestAppMaui
 build_property.ProjectDir = C:\GIT\TestAppMaui\src\MauiClient\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
@@ -20,13 +20,13 @@ build_property.EnableCodeStyleSeverity =
 
 [C:/GIT/TestAppMaui/src/MauiClient/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TestAppMaui.MauiClient.App.xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TestAppMaui.App.xaml
 build_metadata.AdditionalFiles.TargetPath = App.xaml
 build_metadata.AdditionalFiles.RelativePath = App.xaml
 
 [C:/GIT/TestAppMaui/src/MauiClient/Resources/Styles/Styles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = TestAppMaui.MauiClient.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.ManifestResourceName = TestAppMaui.Resources.Styles.Styles.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
 

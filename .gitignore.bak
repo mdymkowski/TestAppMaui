@@ -1,0 +1,7 @@
+# Generated Windows packaging assets
+src/MauiClient/Platforms/Windows/Assets/*.png
+/.vs
+bin/
+obj/
+Debug/
+Release/

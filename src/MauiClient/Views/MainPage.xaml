@@ -3,35 +3,49 @@
     x:Class="TestAppMaui.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:telerik="http://schemas.telerik.com/2022/xaml/maui"
-    Title="Zadania">
-    <VerticalStackLayout Padding="16" Spacing="16">
-        <Label Text="Zadania" FontAttributes="Bold" FontSize="24" />
+    xmlns:converters="clr-namespace:TestAppMaui.Converters"
 
+    Title="Zadania">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <VerticalStackLayout Padding="16" Spacing="16">
+
+        <!-- Nagłówek -->
+        <Label Text="Zadania"
+               FontAttributes="Bold"
+               FontSize="24" />
+
+        <!-- Pole tekstowe + przycisk -->
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-            <!--<telerik:RadEntry
+            <Entry
                 Placeholder="Nazwa zadania"
                 Text="{Binding NewTaskName}" />
-            <telerik:RadButton
+            <Button
                 Grid.Column="1"
                 Text="Wyślij"
-                Command="{Binding SendCommand}" />-->
+                Command="{Binding SendCommand}" />
         </Grid>
 
-        <Label Text="{Binding ErrorMessage}" TextColor="Red">
-            <Label.Triggers>
-                <DataTrigger TargetType="Label" Binding="{Binding ErrorMessage}" Value="{x:Null}">
-                    <Setter Property="IsVisible" Value="False" />
-                </DataTrigger>
-            </Label.Triggers>
-        </Label>
+        <!-- Komunikat o błędzie -->
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource  NullToBoolConverter}}" />
 
-        <!--<telerik:RadDataGrid
-            AutoGenerateColumns="False"
-            ItemsSource="{Binding Tasks}">
-            <telerik:RadDataGrid.Columns>
-                <telerik:DataGridTextColumn HeaderText="Nazwa" PropertyName="Name" />
-            </telerik:RadDataGrid.Columns>
-        </telerik:RadDataGrid>-->
+        <!-- Lista zadań -->
+        <CollectionView ItemsSource="{Binding Tasks}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,4"
+                           Padding="8">
+                        <Label Text="{Binding Name}"
+                               FontSize="18" />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>
