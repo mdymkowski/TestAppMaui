@@ -8,6 +8,7 @@ public sealed class CreateTaskCommandValidator : AbstractValidator<CreateTaskCom
     {
         RuleFor(command => command.Name)
             .NotEmpty()
-            .MinimumLength(3);
+            .MinimumLength(3)
+            .WithMessage("Minimum 3 znaki");
     }
 }
