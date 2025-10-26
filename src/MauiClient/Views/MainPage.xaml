@@ -20,14 +20,24 @@
                FontSize="24" />
 
         <!-- Pole tekstowe + przycisk -->
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
             <Entry
+                Grid.Column="0"
+                Grid.Row="0"
                 Placeholder="Nazwa zadania"
                 Text="{Binding NewTaskName}" />
             <Button
                 Grid.Column="1"
+                Grid.Row="0"
                 Text="Wyślij"
                 Command="{Binding SendCommand}" />
+            <Entry
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Placeholder="Opis (max 250 znaków)"
+                Text="{Binding NewTaskDescription}"
+                MaxLength="250" />
         </Grid>
 
         <!-- Komunikat o błędzie -->
@@ -41,8 +51,16 @@
                 <DataTemplate>
                     <Border Margin="0,4"
                            Padding="8">
-                        <Label Text="{Binding Name}"
-                               FontSize="18" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Name}"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+                            <Label Text="{Binding Description}"
+                                   FontSize="14"
+                                   TextColor="Gray"
+                                   LineBreakMode="WordWrap"
+                                   IsVisible="{Binding Description, Converter={StaticResource NullToBoolConverter}}" />
+                        </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -9,7 +9,7 @@ public static class TaskMappings
     public static TaskDto ToDto(this TaskItem task)
     {
         ArgumentNullException.ThrowIfNull(task);
-        return new TaskDto(task.Id, task.Name);
+        return new TaskDto(task.Id, task.Name, task.Description);
     }
 
     public static IReadOnlyList<TaskDto> ToDto(this IEnumerable<TaskItem> tasks)

@@ -23,6 +23,9 @@ public partial class MainViewModel : ObservableObject
     private string _newTaskName = string.Empty;
 
     [ObservableProperty]
+    private string? _newTaskDescription = string.Empty;
+
+    [ObservableProperty]
     private bool _isBusy;
 
     [ObservableProperty]
@@ -66,13 +69,14 @@ public partial class MainViewModel : ObservableObject
         try
         {
             IsBusy = true;
-            var createdTask = await _mediator.Send(new CreateTaskCommand(NewTaskName)).ConfigureAwait(false);
+            var createdTask = await _mediator.Send(new CreateTaskCommand(NewTaskName, NewTaskDescription)).ConfigureAwait(false);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 var insertIndex = Tasks.TakeWhile(task => string.Compare(task.Name, createdTask.Name, StringComparison.CurrentCultureIgnoreCase) <= 0).Count();
                 Tasks.Insert(insertIndex, createdTask);
                 NewTaskName = string.Empty;
+                NewTaskDescription = string.Empty;
             });
 
             ErrorMessage = null;
