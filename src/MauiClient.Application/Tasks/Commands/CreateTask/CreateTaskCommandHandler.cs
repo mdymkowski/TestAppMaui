@@ -16,7 +16,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
     public async Task<TaskDto> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = TaskItem.Create(request.Name);
+        var task = TaskItem.Create(request.Name, request.Description);
         await _taskRepository.AddAsync(task, cancellationToken).ConfigureAwait(false);
         return task.ToDto();
     }

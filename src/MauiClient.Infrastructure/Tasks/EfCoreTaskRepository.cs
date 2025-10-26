@@ -19,7 +19,7 @@ public sealed class EfCoreTaskRepository : ITaskRepository
     public async Task<IReadOnlyList<TaskItem>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
-        await context.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
 
         var tasks = await context.Tasks
             .AsNoTracking()
@@ -35,7 +35,7 @@ public sealed class EfCoreTaskRepository : ITaskRepository
         ArgumentNullException.ThrowIfNull(task);
 
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
-        await context.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
 
         context.Tasks.Add(task);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

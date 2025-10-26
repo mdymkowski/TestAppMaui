@@ -8,31 +8,55 @@ public sealed class TaskItem
 
     public string Name { get; private set; } = string.Empty;
 
+    public string? Description { get; private set; }
+
+    public const int DescriptionMaxLength = 250;
+
     private TaskItem()
     {
     }
 
-    private TaskItem(Guid id, string name)
+    private TaskItem(Guid id, string name, string? description)
     {
         Id = id;
         Name = name;
+        Description = description;
     }
 
-    public static TaskItem Create(string name)
+    public static TaskItem Create(string name, string? description)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        return new TaskItem(Guid.NewGuid(), name);
+        var normalizedDescription = NormalizeDescription(description);
+        return new TaskItem(Guid.NewGuid(), name, normalizedDescription);
     }
 
-    public static TaskItem FromExisting(Guid id, string name)
+    public static TaskItem FromExisting(Guid id, string name, string? description)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        return new TaskItem(id, name);
+        var normalizedDescription = NormalizeDescription(description);
+        return new TaskItem(id, name, normalizedDescription);
     }
 
     public void Rename(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         Name = name;
+    }
+
+    private static string? NormalizeDescription(string? description)
+    {
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            return null;
+        }
+
+        var trimmedDescription = description.Trim();
+
+        if (trimmedDescription.Length > DescriptionMaxLength)
+        {
+            throw new ArgumentException($"Description cannot exceed {DescriptionMaxLength} characters.", nameof(description));
+        }
+
+        return trimmedDescription;
     }
 }

@@ -23,6 +23,9 @@ public sealed class TaskDbContext : DbContext
             entity.Property(task => task.Name)
                 .IsRequired()
                 .HasColumnType("TEXT");
+            entity.Property(task => task.Description)
+                .HasMaxLength(TaskItem.DescriptionMaxLength)
+                .HasColumnType("TEXT");
         });
     }
 }
