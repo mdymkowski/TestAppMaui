@@ -4,8 +4,6 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient", "src\MauiClient\MauiClient.csproj", "{399E1D26-CE4A-44A7-8723-2003914EDDFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedDDD.Contracts", "src\SharedDDD\Contracts\SharedDDD.Contracts.csproj", "{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Domain", "src\MauiClient.Domain\MauiClient.Domain.csproj", "{1632F161-9F15-4E64-BF6A-E5BEC881D933}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiClient.Application", "src\MauiClient.Application\MauiClient.Application.csproj", "{A2AC7002-421B-407B-9FF7-8A17028F3047}"
@@ -22,10 +20,6 @@ Global
 		{399E1D26-CE4A-44A7-8723-2003914EDDFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{399E1D26-CE4A-44A7-8723-2003914EDDFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{399E1D26-CE4A-44A7-8723-2003914EDDFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FB9F7A6-84E6-4480-AD8F-8AE7206C4BC2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1632F161-9F15-4E64-BF6A-E5BEC881D933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1632F161-9F15-4E64-BF6A-E5BEC881D933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1632F161-9F15-4E64-BF6A-E5BEC881D933}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D758B7EC-EC3A-4275-BC1C-AA1EBDB85DED}
 	EndGlobalSection
 EndGlobal

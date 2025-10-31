@@ -25,15 +25,12 @@
     <MauiSplashScreen Include="Resources\Splash\splash.svg" />
   </ItemGroup>
   <ItemGroup>
-    <MauiXaml Update="Views\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <DependentUpon>MainPage.xaml.cs</DependentUpon>
-    </MauiXaml>
     <MauiXaml Update="Resources\Styles\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Maui.Markup" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />

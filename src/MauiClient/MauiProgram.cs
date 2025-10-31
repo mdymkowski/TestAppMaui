@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Markup;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,9 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-        builder.UseMauiApp<App>();
+        builder
+            .UseMauiApp<App>()
+            .UseMauiCommunityToolkitMarkup();
 
         var databasePath = Path.Combine(FileSystem.AppDataDirectory, "testappmaui.db");
         var databaseDirectory = Path.GetDirectoryName(databasePath);
@@ -40,8 +43,9 @@ public static class MauiProgram
             .AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(CreateTaskCommand).Assembly))
             .AddValidatorsFromAssembly(typeof(CreateTaskCommandValidator).Assembly)
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-            .AddSingleton<MainViewModel>()
-            .AddSingleton<MainPage>();
+            .AddSingleton<AppShell>()
+            .AddTransient<MainViewModel>()
+            .AddTransient<MainPage>();
 
         var app = builder.Build();
 
