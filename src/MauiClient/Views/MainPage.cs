@@ -8,11 +8,17 @@ using TestAppMaui.MauiClient.ViewModels;
 
 namespace TestAppMaui.Views
 {
-    public sealed partial class MainPage : ContentPage
+    public sealed partial class MainPage : BasePage
     {
+
         public MainPage(MainViewModel mainViewModel)
         {
             BindingContext = mainViewModel;
+           
+        }
+
+        public override void Build()
+        {
             Title = "Strona główna";
 
             Resources = new ResourceDictionary
@@ -23,7 +29,7 @@ namespace TestAppMaui.Views
             // --- Nagłówek ---
             var headerLabel = new Label
             {
-                Text = "Zadania",
+                Text = "Zadania 123",
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 24
             };
@@ -31,7 +37,7 @@ namespace TestAppMaui.Views
             // --- Pole tekstowe + przycisk ---
             var nameEntry = new Entry
             {
-                Placeholder = "Nazwa zadania"
+                Placeholder = "Nazwa zadania123"
             };
             nameEntry.SetBinding(Entry.TextProperty, "NewTaskName");
 
