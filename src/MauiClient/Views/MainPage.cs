@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestAppMaui.Converters;
-using TestAppMaui.MauiClient.ViewModels;
+﻿using TestAppMaui.MauiClient.ViewModels;
 
 namespace TestAppMaui.Views
 {
     public sealed partial class MainPage : BasePage
     {
-
         public MainPage(MainViewModel mainViewModel)
         {
             BindingContext = mainViewModel;
-           
         }
 
         public override void Build()
